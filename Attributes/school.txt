@@ -1,0 +1,8 @@
+Conjuration
+Necromancy
+Evocation
+Abjuration 
+Transmutation
+Divination
+Enchantment
+Illusion

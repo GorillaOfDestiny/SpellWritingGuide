@@ -1,0 +1,26 @@
+10-feet radius
+100-feet line
+15-feet cone
+15-feet cube
+15-feet radius
+30-feet cone
+30-feet line
+30-feet radius
+5-feet radius
+60-feet cone
+60-feet line
+Point (1 miles)
+Point (10 feet)
+Point (1000 feet)
+Point (120 feet)
+Point (150 feet)
+Point (30 feet)
+Point (300 feet)
+Point (5 feet)
+Point (500 feet)
+Point (60 feet)
+Point (90 feet)
+Self
+Sight
+Special
+Touch

@@ -1,0 +1,16 @@
+acid
+bludgeoning
+cold
+damage
+extra
+fire
+force
+lightning
+necrotic
+nonmagical
+piercing
+poison
+psychic
+radiant
+slashing
+thunder
