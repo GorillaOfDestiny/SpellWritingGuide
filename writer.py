@@ -64,7 +64,7 @@ def decode_shape(in_array,k=1,point_color = 'k',color = 'k',
                  label = None,base_fn = bases.polygon,base_kwargs = [],
                  shape_fn = line_shapes.straight,shape_kwargs = [],
                  plot_base = False):
-    
+    #decodes a single array into a given base, use plot_base = True if you are plotting it on its own
     n = len(in_array)
     x,y = base_fn(n,*base_kwargs)
     if plot_base == True:
@@ -89,6 +89,8 @@ def draw_multiple_inputs(in_array,
                          shape_fn = line_shapes.straight,shape_kwargs = [],
                          point_color = 'k',labels = [],legend = False,colors = [],
                          legend_loc = "center"):
+    
+    #draws multiple inputs on a single base
     if colors == []:
         colors = [point_color]*in_array.shape[0]
     n = in_array.shape[1]
@@ -113,12 +115,13 @@ def load_attribute(fname):
     data = [d.replace("\n","").lower() for d in data]
     return(data)
 
+
 def draw_spell(level,rang,area,dtype,school,title = None,savename = "output.png",legend = False,
                 base_fn = bases.polygon,base_kwargs = [],
                 shape_fn = line_shapes.straight,shape_kwargs = [],
                 colors = [],legend_loc = "center",breakdown = False):
     
-    
+    #draws a spell given certain values by comparing it to input txt
     ranges = load_attribute("attributes/range.txt")
     levels = load_attribute("attributes/levels.txt")
     area_types = load_attribute("attributes/area_types.txt")
@@ -147,13 +150,15 @@ def draw_spell(level,rang,area,dtype,school,title = None,savename = "output.png"
         non_repeating = generate_unique_combinations(N)
         non_repeating = np.array(non_repeating)
         np.save(f"Uniques/{N}.npy",non_repeating)
-    input_array = np.array([non_repeating[i+1] for i in attributes])
+    input_array = np.array([non_repeating[i+1] for i in attributes])#note +1 s.t. 0th option is always open for empty input
     draw_multiple_inputs(input_array,labels = labels,legend = legend,
                          base_fn = base_fn,base_kwargs = base_kwargs,
                          shape_fn = shape_fn,shape_kwargs = shape_kwargs,
                          colors = colors,legend_loc = legend_loc)
     plt.title(title)
     plt.savefig(savename,dpi = 250)
+
+#to run if the file is called
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()

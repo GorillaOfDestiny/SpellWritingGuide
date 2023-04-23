@@ -1,7 +1,8 @@
 import numpy as np
 import math
-
+#functions for drawing lines between points
 def centre_circle(P,Q,thetas = None):
+    #draws connecting circles between two lines with the centre being the average of the two points
     x1 = P[0]
     y1 = P[1]
     x2 = Q[0]
@@ -22,6 +23,7 @@ def centre_circle(P,Q,thetas = None):
     return(X2,Y2)
 
 def non_centre_circle(P,Q,b,thetas = None):
+    #draws a connecting circle between two points with a centre defined by `b` away from the average. Always chooses the small arc.
     x1 = P[0]
     y1 = P[1]
     x2 = Q[0]
@@ -61,6 +63,7 @@ def non_centre_circle(P,Q,b,thetas = None):
     return(X,Y)
 
 def straight(P,Q):
+    #A straight line between two points
     X = [P[0],Q[0]]
     Y = [P[1],Q[1]]
     return(X,Y)
