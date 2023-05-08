@@ -2,3 +2,4 @@ Uniques/
 *.png
 __pycache__/
 *.pyc
+*.wav
