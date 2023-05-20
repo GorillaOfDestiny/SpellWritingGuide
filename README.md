@@ -20,6 +20,7 @@ The required python modules are:
   - argparse
   - math
   - os
+  - tqdm
  
 ## Running the file
 

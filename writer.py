@@ -4,9 +4,9 @@ import line_shapes
 import numpy as np
 import matplotlib.pyplot as plt
 import os
-import matplotlib.cm as cm
+from tqdm.auto import tqdm
 
-cmap = cm.get_cmap('viridis')
+cmap = plt.get_cmap('viridis')
 #---------Functions for creating unique binary numbers------
 def cycle_list(l,loops = 1):
     n = len(l)
@@ -17,10 +17,7 @@ def cycle_list(l,loops = 1):
 def generate_unique_combinations(L):
     combinations = generate_binary_strings(L)
     non_repeating = [combinations[0]]
-    for i in range(len(combinations)):
-        if i%round(0.1*len(combinations)) ==0:
-            print(f'{100*i/len(combinations):.1f}%')
-        
+    for i in tqdm(range(len(combinations)),desc = "Genearting Unique Binary Numbers"):
         ref = list(combinations[i])
         N = len(ref)
         test = 0
@@ -29,8 +26,6 @@ def generate_unique_combinations(L):
                 
                 if cycle_list(list(non_repeating[j]),loops = n+1) == ref:
                     test += 1
-                #else:
-                #    print(combinations[j], ref)
         
         if test == 0:
             non_repeating.append(combinations[i])
@@ -122,11 +117,11 @@ def draw_spell(level,rang,area,dtype,school,title = None,savename = "output.png"
                 colors = [],legend_loc = "center",breakdown = False):
     
     #draws a spell given certain values by comparing it to input txt
-    ranges = load_attribute("attributes/range.txt")
-    levels = load_attribute("attributes/levels.txt")
-    area_types = load_attribute("attributes/area_types.txt")
-    dtypes = load_attribute("attributes/damage_types.txt")
-    schools = load_attribute("attributes/school.txt")
+    ranges = load_attribute("Attributes/range.txt")
+    levels = load_attribute("Attributes/levels.txt")
+    area_types = load_attribute("Attributes/area_types.txt")
+    dtypes = load_attribute("Attributes/damage_types.txt")
+    schools = load_attribute("Attributes/school.txt")
 
     i_range = ranges.index(rang)
     i_levels = levels.index(level)
@@ -159,6 +154,8 @@ def draw_spell(level,rang,area,dtype,school,title = None,savename = "output.png"
     plt.savefig(savename,dpi = 250)
 
 #to run if the file is called
+
+
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
@@ -177,19 +174,19 @@ if __name__ == "__main__":
     if args.arg_help:
         if args.range:
             print("--------Range--------")
-            print("\n".join(load_attribute("attributes/range.txt")))
+            print("\n".join(load_attribute("Attributes/range.txt")))
         if args.level:
             print("--------Level--------")
-            print("\n".join(load_attribute("attributes/levels.txt")))
+            print("\n".join(load_attribute("Attributes/levels.txt")))
         if args.area:
             print("--------Area--------")
-            print("\n".join(load_attribute("attributes/area_types.txt")))
+            print("\n".join(load_attribute("Attributes/area_types.txt")))
         if args.dtype:
             print("--------Damage Types--------")
-            print("\n".join(load_attribute("attributes/damage_types.txt")))
+            print("\n".join(load_attribute("Attributes/damage_types.txt")))
         if args.school:
             print("--------School--------")
-            print("\n".join(load_attribute("attributes/school.txt")))
+            print("\n".join(load_attribute("Attributes/school.txt")))
     else:
         if args.legend:
             if args.legend == 1:
