@@ -83,7 +83,7 @@ def draw_multiple_inputs(in_array,
                          base_fn = bases.polygon,base_kwargs = [],
                          shape_fn = line_shapes.straight,shape_kwargs = [],
                          point_color = 'k',labels = [],legend = False,colors = [],
-                         legend_loc = "center"):
+                         legend_loc = "upper left"):
     
     #draws multiple inputs on a single base
     if colors == []:
@@ -97,10 +97,11 @@ def draw_multiple_inputs(in_array,
         labels = [None]*in_array.shape[0]
 
     for i,k in enumerate(range(in_array.shape[0])):
+        
         decode_shape(in_array[i],k = k+1,base_fn = base_fn,base_kwargs = base_kwargs,
                      shape_fn = shape_fn,shape_kwargs = shape_kwargs,label = labels[i],color = colors[i])
     if labels[0] != None and legend == True:
-        plt.legend(loc = legend_loc)
+        plt.legend(loc = legend_loc,fontsize = 4)
     plt.axis('off')
     plt.axis('scaled')
 def load_attribute(fname):
@@ -114,7 +115,7 @@ def load_attribute(fname):
 def draw_spell(level,rang,area,dtype,school,title = None,savename = "output.png",legend = False,
                 base_fn = bases.polygon,base_kwargs = [],
                 shape_fn = line_shapes.straight,shape_kwargs = [],
-                colors = [],legend_loc = "center",breakdown = False):
+                colors = [],legend_loc = "upper left",breakdown = False):
     
     #draws a spell given certain values by comparing it to input txt
     ranges = load_attribute("Attributes/range.txt")
@@ -128,13 +129,14 @@ def draw_spell(level,rang,area,dtype,school,title = None,savename = "output.png"
     i_area = area_types.index(area)
     i_dtype = dtypes.index(dtype)
     i_school = schools.index(school)
-    attributes = [i_levels,i_dtype,i_school,i_area,i_range]
+    attributes = [i_levels,i_school,i_dtype,i_area,i_range]
     labels = [f"level: {level}",
-              f"damage type: {dtype}",
               f"school: {school}",
+              f"damage type: {dtype}",
               f"range: {rang}",
               f"area_type: {area}"]
     N = 2*len(attributes)+1
+    
     if len(colors) == 0 and breakdown == True:
         colors = [cmap(i/len(attributes)) for i in range(len(attributes))]
     if not os.path.isdir("Uniques/"):
@@ -145,7 +147,7 @@ def draw_spell(level,rang,area,dtype,school,title = None,savename = "output.png"
         non_repeating = generate_unique_combinations(N)
         non_repeating = np.array(non_repeating)
         np.save(f"Uniques/{N}.npy",non_repeating)
-    input_array = np.array([non_repeating[i+1] for i in attributes])#note +1 s.t. 0th option is always open for empty input
+    input_array = np.array([non_repeating[i] for i in attributes])#note +1 s.t. 0th option is always open for empty input
     draw_multiple_inputs(input_array,labels = labels,legend = legend,
                          base_fn = base_fn,base_kwargs = base_kwargs,
                          shape_fn = shape_fn,shape_kwargs = shape_kwargs,
@@ -237,4 +239,12 @@ if __name__ == "__main__":
         draw_spell(level,rang,area,dtype,school,title = title,legend = legend,
                 base_fn = bases.polygon,shape_fn = line_shapes.straight,
                 breakdown = breakdown,savename = savename)
+        plt.clf()
+        input_shape = np.array([0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1])
+        decode_shape(input_shape,k=3,point_color = 'k',color = 'k',
+                 label = None,base_fn = bases.polygon,base_kwargs = [],
+                 shape_fn = line_shapes.straight,shape_kwargs = [],
+                 plot_base = True)
+        plt.axis('off')
+        plt.savefig("test.png")
     
