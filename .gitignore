@@ -4,3 +4,5 @@ __pycache__/
 *.pyc
 *.wav
 dictionary_maker.py
+swg_dictionary.txt
+*.eps

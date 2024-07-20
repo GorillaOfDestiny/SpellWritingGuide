@@ -147,14 +147,14 @@ def draw_spell(level,rang,area,dtype,school,title = None,savename = "output.png"
         non_repeating = np.array(non_repeating)
         np.save(f"Uniques/{N}.npy",non_repeating)
     input_array = np.array([non_repeating[i] for i in attributes])#note +1 s.t. 0th option is always open for empty input
-    print(input_array)
+    #print(input_array)
     draw_multiple_inputs(input_array,labels = labels,legend = legend,
                          base_fn = base_fn,base_kwargs = base_kwargs,
                          shape_fn = shape_fn,shape_kwargs = shape_kwargs,
                          colors = colors,legend_loc = legend_loc)
     plt.title(title)
     if savename is not None:
-        plt.savefig(savename,dpi = 250)
+        plt.savefig(savename,dpi = 250,transparent = True, bbox_inches='tight')
     else:
         plt.show()
 

@@ -1,0 +1,19 @@
+Instantaneous
+1 hour
+1 minute
+1 round
+10 days
+10 minutes
+24 hours
+30 days
+7 days
+8 hours
+Special
+Until dispelled
+Up to 1 hour
+Up to 1 minute
+Up to 1 round
+Up to 10 minutes
+Up to 2 hours
+Up to 24 hours
+Up to 8 hours
