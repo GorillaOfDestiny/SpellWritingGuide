@@ -108,7 +108,7 @@ def load_attribute(fname):
     with open(fname,"r") as f:
         data = f.readlines()
         f.close()
-    data = [d.replace("\n","").lower() for d in data]
+    data = [d.replace("\n","") for d in data]
     return(data)
 
 
@@ -123,9 +123,8 @@ def draw_spell(level,rang,area,dtype,school,title = None,savename = "output.png"
     area_types = load_attribute("Attributes/area_types.txt")
     dtypes = load_attribute("Attributes/damage_types.txt")
     schools = load_attribute("Attributes/school.txt")
-
     i_range = ranges.index(rang)
-    i_levels = levels.index(level)
+    i_levels = levels.index(str(level))
     i_area = area_types.index(area)
     i_dtype = dtypes.index(dtype)
     i_school = schools.index(school)
@@ -148,19 +147,23 @@ def draw_spell(level,rang,area,dtype,school,title = None,savename = "output.png"
         non_repeating = np.array(non_repeating)
         np.save(f"Uniques/{N}.npy",non_repeating)
     input_array = np.array([non_repeating[i] for i in attributes])#note +1 s.t. 0th option is always open for empty input
+    print(input_array)
     draw_multiple_inputs(input_array,labels = labels,legend = legend,
                          base_fn = base_fn,base_kwargs = base_kwargs,
                          shape_fn = shape_fn,shape_kwargs = shape_kwargs,
                          colors = colors,legend_loc = legend_loc)
     plt.title(title)
-    plt.savefig(savename,dpi = 250)
+    if savename is not None:
+        plt.savefig(savename,dpi = 250)
+    else:
+        plt.show()
 
 #to run if the file is called
-
 
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
+    parser.add_argument("-spell-name",help = "spell name")
     parser.add_argument("-level",help = "necessary input: level of the spell")
     parser.add_argument("-range",help = "necessary input: range of the spell")
     parser.add_argument("-area",help = "necessary input: area type of the spell")
@@ -170,7 +173,7 @@ if __name__ == "__main__":
     parser.add_argument("--savename",help = "savename of file")
     parser.add_argument("--legend",help = "bool to print legend or not (0 = False,1 = True)")
     parser.add_argument("--breakdown",help = "bool to control whether to breakdown the lines with colour")
-    parser.add_argument("--arg_help",help = "Prints the available options for the chosen attributes")
+    parser.add_argument("-ah", "--arg_help",help = "Prints the available options for the chosen attributes",action=argparse.BooleanOptionalAction)
     args = parser.parse_args()
 
     if args.arg_help:
@@ -240,11 +243,5 @@ if __name__ == "__main__":
                 base_fn = bases.polygon,shape_fn = line_shapes.straight,
                 breakdown = breakdown,savename = savename)
         plt.clf()
-        input_shape = np.array([0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1])
-        decode_shape(input_shape,k=3,point_color = 'k',color = 'k',
-                 label = None,base_fn = bases.polygon,base_kwargs = [],
-                 shape_fn = line_shapes.straight,shape_kwargs = [],
-                 plot_base = True)
-        plt.axis('off')
-        plt.savefig("test.png")
+        
     

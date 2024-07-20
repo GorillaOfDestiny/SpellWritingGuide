@@ -1,9 +1,9 @@
-blank
+Blank
+Abjuration
 Conjuration
-Necromancy
-Evocation
-Abjuration 
-Transmutation
 Divination
 Enchantment
+Evocation
 Illusion
+Necromancy
+Transmutation

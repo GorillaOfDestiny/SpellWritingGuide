@@ -3,3 +3,4 @@ Uniques/
 __pycache__/
 *.pyc
 *.wav
+dictionary_maker.py

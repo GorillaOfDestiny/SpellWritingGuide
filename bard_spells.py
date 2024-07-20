@@ -36,7 +36,7 @@ def chords_maker(rang,level,area,dtype,school,scale_steps = "2212221",f0 = 440):
     i_dtype = dtypes.index(dtype)
     i_school = schools.index(school)
     attr = [i_range,i_levels,i_area,i_dtype,i_school]
-
+    print(attr)
     while len(set(attr)) != len(attr):
         seen = []
         for i,a in enumerate(attr):
