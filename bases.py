@@ -2,7 +2,7 @@ import numpy as np
 import math
 
 #---------File for defining spell bases----------#
-# every base must haave an input of n and return (x,y)
+# every base must have an input of n and return (x,y)
 
 def polygon(n,radius = 1,start_angle = None):
     #Creates x,y data for an n-sided polygon
@@ -40,13 +40,13 @@ def circle(n,radius = 1,theta0 = 0,theta1 = -np.pi/2):
     return(x,y)
 
 def cubic(n,a = 0.1,b=0,c = -0.75,d=0):
-    #Creates a base accourding to the cubic function
+    #Creates a base according to the cubic function
     x = np.arange(-math.floor(n/2),math.ceil(n/2))
     y = a*x**3+b**2+c*x+d
     return(x,y)
 
 def golden(n,lim = 3*np.pi):
-    #Creates a base accourding to the golden ratio spiral
+    #Creates a base according to the golden ratio spiral
     t = np.linspace(0,lim,n)
     g  = (1 + 5 ** 0.5) / 2 #golden ratio
     f = g**(t*g/(2*np.pi)) #factor
