@@ -1,4 +1,3 @@
-
 import bases
 import line_shapes
 import numpy as np
