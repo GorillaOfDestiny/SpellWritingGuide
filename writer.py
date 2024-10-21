@@ -197,6 +197,8 @@ def draw_spell_2(level,rang,area,dtype,school,duration,concentration,ritual,titl
     
     if len(colors) == 0 and breakdown == True:
         colors = [cmap(i/len(attributes)) for i in range(len(attributes))]
+    elif len(colors) == 0:
+        colors = 'k'
     if not os.path.isdir(base_dir +"Uniques/"):
         os.makedirs(base_dir +"Uniques/")
     if os.path.isfile(base_dir +f'Uniques/{N}.npy'):
@@ -221,7 +223,7 @@ def draw_spell_2(level,rang,area,dtype,school,duration,concentration,ritual,titl
     
     plt.title(title)
     if savename is not None:
-        plt.savefig(savename,transparent = True, bbox_inches='tight')
+        plt.savefig(savename,transparent = False, bbox_inches='tight')
         plt.clf()
     else:
         plt.show()
@@ -299,17 +301,32 @@ def draw_attribute(level = None,rang = None, area = None,
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("-spell-name",help = "spell name")
-    parser.add_argument("-level",help = "necessary input: level of the spell")
-    parser.add_argument("-range",help = "necessary input: range of the spell")
-    parser.add_argument("-area",help = "necessary input: area type of the spell")
-    parser.add_argument("-dtype",help = "necessary input: dtype of the spell")
-    parser.add_argument("-school",help = "necessary input: school of the spell")
-    parser.add_argument("--title",help = "title in plot")
-    parser.add_argument("--savename",help = "savename of file")
-    parser.add_argument("--legend",help = "bool to print legend or not (0 = False,1 = True)")
-    parser.add_argument("--breakdown",help = "bool to control whether to breakdown the lines with colour")
-    parser.add_argument("-ah", "--arg_help",help = "Prints the available options for the chosen attributes",action=argparse.BooleanOptionalAction)
+    parser.add_argument("-spell-name",help = "spell name",default = "fireball")
+    parser.add_argument("-level",help = "necessary input: level of the spell",
+                        default = "3")
+    parser.add_argument("-range",help = "necessary input: range of the spell",
+                        default = "150 feet")
+    parser.add_argument("-area",help = "necessary input: area type of the spell",
+                        default = "sphere (30)")
+    parser.add_argument("-dtype",help = "necessary input: dtype of the spell",
+                        default = "fire")
+    parser.add_argument("-school",help = "necessary input: school of the spell",
+                        default = "evocation")
+    parser.add_argument("-duration",help = "Duration of the spell",
+                        default = "Instantaneous")
+    parser.add_argument("--title",help = "title in plot",
+                        default = None)
+    parser.add_argument("--savename",help = "savename of file",
+                        default = "output.png")
+    parser.add_argument("-concentration",help = "include with --new if spell is concentration",action = "store_true")
+    parser.add_argument("-ritual",help = "include with --new if spell is a ritual",action = "store_true")
+    parser.add_argument("--new",help = "Option to use the new 13 point system",action = "store_true")
+
+    parser.add_argument("--legend",help = "bool to print legend or not",action='store_true')
+    parser.add_argument("--breakdown",help = "bool to control whether to breakdown the lines with colour",action='store_true')
+    parser.add_argument("-ah", "--arg_help",
+                        help = "Prints the available options for the chosen attributes",
+                        action=argparse.BooleanOptionalAction)
     args = parser.parse_args()
 
     if args.arg_help:
@@ -329,55 +346,20 @@ if __name__ == "__main__":
             print("--------School--------")
             print("\n".join(load_attribute("Attributes/school.txt")))
     else:
-        if args.legend:
-            if args.legend == 1:
-                legend = False
-            else:
-                legend = True
-        else:
-            legend = False
 
-        if args.breakdown:
-            if args.breakdown == 1:
-                breakdown = False
-            else:
-                breakdown = True
+        if not args.new:
+            draw_spell(level=args.level.lower(),rang=args.range.lower(),
+                       area=args.area.lower(),dtype=args.dtype.lower(),
+                       school=args.school.lower(),
+                       title = args.title,legend = args.legend,
+                    breakdown = args.breakdown,savename = args.savename)
+            plt.clf()
         else:
-            breakdown= False
-
-        if not args.title:
-            title = None
-        if not args.savename:
-            savename = "output.png"
-
-        if not args.level:
-            level = "3"
-        else:
-            level = args.level
-        
-        if not args.range:
-            rang = "150 feet"
-        else:
-            rang = args.range
-        
-        if not args.area:
-            area = "sphere (30)"
-        else:
-            area = args.area
-        
-        if not args.dtype:
-            dtype = "fire"
-        else:
-            dtype = args.dtype
-
-        if not args.school:
-            school = "evocation"
-        else:
-            school = args.school
-
-        draw_spell(level,rang,area,dtype,school,title = title,legend = legend,
-                base_fn = bases.polygon,shape_fn = line_shapes.straight,
-                breakdown = breakdown,savename = savename)
-        plt.clf()
-        
+            draw_spell_2(level = args.level.lower(),rang = args.range.lower(),
+                         area = args.area.lower(),dtype=args.dtype.lower(),
+                         school = args.school.lower(),duration = args.duration.lower(),
+                        concentration=args.concentration,ritual=args.ritual,title =args.title,
+                        savename = args.savename,legend = args.legend,
+                        breakdown = args.breakdown)
+            plt.clf()
     
