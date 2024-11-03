@@ -356,12 +356,12 @@ if __name__ == "__main__":
             level = args.level
         
         if not args.range:
-            rang = "150 feet"
+            rang = "150ft"
         else:
             rang = args.range
         
         if not args.area:
-            area = "sphere (30)"
+            area = "sphere30"
         else:
             area = args.area
         

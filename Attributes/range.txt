@@ -1,18 +1,18 @@
-Blank
-1 mile
-10 feet
-100 feet
-120 feet
-150 feet
-30 feet
-300 feet
-5 feet
-500 feet
-500 miles
-60 feet
-90 feet
-Self
-Sight
-Special
-Touch
-Unlimited
+blank
+1mi
+10ft
+100ft
+120ft
+150ft
+30ft
+300ft
+5ft
+500ft
+500mi
+60ft
+90ft
+self
+sight
+special
+touch
+unlimited
