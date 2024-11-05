@@ -83,7 +83,7 @@ def decode_shape(in_array,k=1,point_color = 'k',on_color = 'darkred',off_color =
 def draw_multiple_inputs(in_array,
                          base_fn = bases.polygon,base_kwargs = [],
                          shape_fn = line_shapes.straight,shape_kwargs = [],
-                         point_color = 'k',labels = [],legend = False,colors = [],
+                         point_color = 'k',labels = [],legend = True,colors = [],
                          legend_loc = "upper left"):
     
     #draws multiple inputs on a single base
@@ -120,7 +120,7 @@ def draw_spell(level,rang,area,dtype,school,title = None,
                savename = "output.png",legend = False,
                 base_fn = bases.polygon,base_kwargs = [],
                 shape_fn = line_shapes.straight,shape_kwargs = [],
-                colors = [],legend_loc = "upper left",breakdown = False):
+                colors = [],legend_loc = "upper left",breakdown = True):
     
     #draws a spell given certain values by comparing it to input txt
     ranges = load_attribute("Attributes/range.txt")
@@ -167,10 +167,10 @@ def draw_spell(level,rang,area,dtype,school,title = None,
         plt.show()
 
 def draw_spell_2(level,rang,area,dtype,school,duration,concentration,ritual,title = None,
-               savename = "output.png",legend = False,
+               savename = "output.png",legend = True,
                 base_fn = bases.polygon,base_kwargs = [],
                 shape_fn = line_shapes.straight,shape_kwargs = [],
-                colors = [],legend_loc = "upper left",breakdown = False,
+                colors = [],legend_loc = "upper left",breakdown = True,
                 base_dir = ""):
     
     #draws a spell given certain values by comparing it to input txt
@@ -221,7 +221,7 @@ def draw_spell_2(level,rang,area,dtype,school,duration,concentration,ritual,titl
     
     plt.title(title)
     if savename is not None:
-        plt.savefig(savename,transparent = True, bbox_inches='tight')
+        plt.savefig(savename,transparent = False, bbox_inches='tight')
         plt.clf()
     else:
         plt.show()
@@ -232,7 +232,7 @@ def draw_attribute(level = None,rang = None, area = None,
                     dtype = None, school = None,duration = None,
                     base_fn = bases.polygon,base_kwargs = [],
                 shape_fn = line_shapes.straight,shape_kwargs = [],
-                colors = [],legend_loc = "upper left",breakdown = False,
+                colors = [],legend_loc = "upper left",breakdown = True,
                 title = None):
     ranges = load_attribute("Attributes/range.txt")
     levels = load_attribute("Attributes/levels.txt")
@@ -305,6 +305,9 @@ if __name__ == "__main__":
     parser.add_argument("-area",help = "necessary input: area type of the spell")
     parser.add_argument("-dtype",help = "necessary input: dtype of the spell")
     parser.add_argument("-school",help = "necessary input: school of the spell")
+    parser.add_argument("-duration",help = "necessary input: duration of the spell")
+    parser.add_argument("-ritual",help = "necessary input: ritual or not (0 = False,1 = True)")
+    parser.add_argument("-concentration",help = "necessary input: concentration or not (0 = False,1 = True)")
     parser.add_argument("--title",help = "title in plot")
     parser.add_argument("--savename",help = "savename of file")
     parser.add_argument("--legend",help = "bool to print legend or not (0 = False,1 = True)")
@@ -328,22 +331,25 @@ if __name__ == "__main__":
         if args.school:
             print("--------School--------")
             print("\n".join(load_attribute("Attributes/school.txt")))
+        if args.duration:
+            print("--------Duration--------")
+            print("\n".join(load_attribute("Attributes/duration.txt")))
     else:
         if args.legend:
             if args.legend == 1:
-                legend = False
+                legend = True
             else:
                 legend = True
         else:
-            legend = False
+            legend = True
 
         if args.breakdown:
             if args.breakdown == 1:
-                breakdown = False
+                breakdown = True
             else:
                 breakdown = True
         else:
-            breakdown= False
+            breakdown= True
 
         if not args.title:
             title = None
@@ -351,9 +357,24 @@ if __name__ == "__main__":
             savename = "output.png"
 
         if not args.level:
-            level = "3"
+            level = "0"
         else:
             level = args.level
+
+        if not args.ritual:
+            ritual = 0
+        else:
+            ritual = args.ritual
+
+        if not args.concentration:
+            concentration = 0
+        else:
+            concentration = args.concentration
+        
+        if not args.duration:
+            duration = "instant"
+        else:
+            duration = args.duration
         
         if not args.range:
             rang = "150ft"
@@ -375,7 +396,7 @@ if __name__ == "__main__":
         else:
             school = args.school
 
-        draw_spell(level,rang,area,dtype,school,title = title,legend = legend,
+        draw_spell_2(level,rang,area,dtype,school,duration,concentration,ritual,title = title,legend = legend,
                 base_fn = bases.polygon,shape_fn = line_shapes.straight,
                 breakdown = breakdown,savename = savename)
         plt.clf()
