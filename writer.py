@@ -5,6 +5,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 from tqdm.auto import tqdm
+from services.spell_lookup_service import SpellLookupService
 
 cmap = plt.get_cmap('viridis')
 #---------Functions for creating unique binary numbers------
@@ -310,7 +311,12 @@ if __name__ == "__main__":
     parser.add_argument("--legend",help = "bool to print legend or not (0 = False,1 = True)")
     parser.add_argument("--breakdown",help = "bool to control whether to breakdown the lines with colour")
     parser.add_argument("-ah", "--arg_help",help = "Prints the available options for the chosen attributes",action=argparse.BooleanOptionalAction)
+    parser.add_argument("--lookup", help="Lookup a spell from spells.json")
     args = parser.parse_args()
+    if args.lookup:
+        SpellLookupService.lookup(args.lookup)
+        exit()
+
 
     if args.arg_help:
         if args.range:
@@ -375,6 +381,7 @@ if __name__ == "__main__":
         else:
             school = args.school
 
+        savename = args.savename
         draw_spell(level,rang,area,dtype,school,title = title,legend = legend,
                 base_fn = bases.polygon,shape_fn = line_shapes.straight,
                 breakdown = breakdown,savename = savename)
