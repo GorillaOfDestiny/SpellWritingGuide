@@ -54,6 +54,25 @@ def golden(n,lim = 3*np.pi):
     y = np.sin(t)*f
     return(x,y)
 
+def einstein(n):
+    if n != 13:
+        raise NotImplementedError(f"Einstein Tile has 13 points so n must be 13. You have n={n}")
+    
+    points = np.array([[1.9,0],
+              [3.8,0.9],
+              [3.3,2.1],
+              [0.8,2.4],
+              [0.1,1.4],
+              [-1.6,2.6],
+              [-3.7,1.7],
+              [-3.1,0.5],
+              [-1.9,0.3],
+              [-2.15,-1.7],
+              [-0.4,-3],
+              [0.4,-2.1],
+              [1.6,-2.13]
+              ])
+    return(points[:,0],points[:,1])
 
 if __name__ == "__main__":
     print("Hello Nerd!")

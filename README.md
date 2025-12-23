@@ -1,6 +1,12 @@
 # SpellWritingGuide
 
-This is the tidier version of the code used in the [Spell Writing Guide](https://www.drivethrurpg.com/product/429711/The-Spell-Writing-Guide?manufacturers_id=22808) which aims to provide a simple method by which we can draw spells in D&D 5e. The system is general to any system and easy to modify, I will explain this later.
+This is the tidier version of the code used in the [Spell Writing Guide](https://www.drivethrurpg.com/product/429711/The-Spell-Writing-Guide?manufacturers_id=22808) which aims to provide a simple method by which we can draw spells in D&D 5e. The system is general to any system and easy to modify, I will explain this later. 
+
+# **!!! OLD REPO ALERT !!!**
+
+**THIS IS RUBBISH**, or at least it's out of date.
+
+[GO HERE](https://github.com/GorillaOfDestiny/SpellWriting) for a much nicer and more complete repo. I'm only keeping this active for those curious about the old methods of generating things.
 
 ## Setup
 

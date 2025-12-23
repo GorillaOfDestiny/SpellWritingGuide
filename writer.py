@@ -5,6 +5,45 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 from tqdm.auto import tqdm
+import glob
+import json
+
+def get_attributes(spell_data):
+    level = spell_data['level']
+    range = spell_data['range']
+    school = spell_data['school']['name']
+    duration = spell_data['duration']
+    concentration = spell_data["concentration"]
+    ritual = spell_data["ritual"]
+    if "damage" in spell_data.keys():
+        if "damage_type" in spell_data["damage"].keys():
+            dtype = spell_data['damage']['damage_type']['name']
+
+        else:
+            dtype = "None"
+    else:
+        dtype = "None"
+        
+        
+    if "area_of_effect" in spell_data.keys():
+        area_of_effect = spell_data['area_of_effect']
+        area_of_effect = f'{area_of_effect["type"]} ({area_of_effect["size"]})'
+    else:
+        area_of_effect = "None"
+    return(level,range,area_of_effect,dtype,school,duration,concentration,ritual)
+
+def get_spell(spell_name,spell_dir = "spells/"):
+    
+    files = glob.glob(f"{spell_dir}{spell_name}.json")
+    if len(files) == 0:
+        raise LookupError(f"Could not find {spell_dir}{spell_name}.json")
+    elif len(files) > 1:
+        raise LookupError(f'Found too many results for {spell_name}. Got {files}')
+    with open(files[0]) as f:
+        data = json.load(f)
+        f.close()
+    return(data)
+
 
 cmap = plt.get_cmap('viridis')
 #---------Functions for creating unique binary numbers------
@@ -84,7 +123,7 @@ def draw_multiple_inputs(in_array,
                          base_fn = bases.polygon,base_kwargs = [],
                          shape_fn = line_shapes.straight,shape_kwargs = [],
                          point_color = 'k',labels = [],legend = False,colors = [],
-                         legend_loc = "upper left"):
+                         legend_loc = "upper left",annotate = False):
     
     #draws multiple inputs on a single base
     if isinstance(colors,list) and len(colors) == 0:
@@ -93,9 +132,12 @@ def draw_multiple_inputs(in_array,
         colors = [colors]*in_array.shape[0]
     n = in_array.shape[1]
     x,y = base_fn(n,*base_kwargs)
+    
     plt.scatter(x[1:],y[1:],s = 70,facecolors = 'none', edgecolors = point_color)
     plt.scatter(x[0],y[0],s = 70,facecolors = point_color, edgecolors = point_color)
-    
+    if annotate:
+        for i in range(len(x)):
+            plt.annotate(str(i),(x[i]+0.1,y[i]+0.1))
     if len(labels) != in_array.shape[0]:
         labels = [None]*in_array.shape[0]
 
@@ -171,7 +213,8 @@ def draw_spell_2(level,rang,area,dtype,school,duration,concentration,ritual,titl
                 base_fn = bases.polygon,base_kwargs = [],
                 shape_fn = line_shapes.straight,shape_kwargs = [],
                 colors = [],legend_loc = "upper left",breakdown = False,
-                base_dir = ""):
+                base_dir = "",return_input_array = False,spell_shift = None,
+                annotate = False):
     
     #draws a spell given certain values by comparing it to input txt
     ranges = load_attribute(base_dir +"Attributes/range.txt")
@@ -180,13 +223,17 @@ def draw_spell_2(level,rang,area,dtype,school,duration,concentration,ritual,titl
     dtypes = load_attribute(base_dir +"Attributes/damage_types.txt")
     schools = load_attribute(base_dir +"Attributes/school.txt")
     durations = load_attribute(base_dir +"Attributes/duration.txt")
-    i_range = ranges.index(rang)
-    i_levels = levels.index(str(level))
-    i_area = area_types.index(area)
-    i_dtype = dtypes.index(dtype)
-    i_school = schools.index(school)
-    i_duration = durations.index(duration)
+    area_types[0] = "none"
+    dtypes[0] = "none"
+    
+    i_range = ranges.index(rang.lower())
+    i_levels = levels.index(str(level).lower())
+    i_area = area_types.index(area.lower())
+    i_dtype = dtypes.index(dtype.lower())
+    i_school = schools.index(school.lower())
+    i_duration = durations.index(duration.lower())
     attributes = [i_levels,i_school,i_dtype,i_area,i_range,i_duration]
+    att_len = [len(levels),len(schools),len(dtypes),len(area_types),len(ranges),len(durations)]
     labels = [f"level: {level}",
               f"school: {school}",
               f"damage type: {dtype}",
@@ -207,12 +254,27 @@ def draw_spell_2(level,rang,area,dtype,school,duration,concentration,ritual,titl
         non_repeating = generate_unique_combinations(N)
         non_repeating = np.array(non_repeating)
         np.save(base_dir +f"Uniques/{N}.npy",non_repeating)
-    input_array = np.array([non_repeating[i] for i in attributes])#note +1 s.t. 0th option is always open for empty input
+
+    non_repeating_att = [np.round(np.linspace(0, len(non_repeating) - 1, al)).astype(int) for al in att_len]
+    
+    #input_array = np.array([non_repeating[non_repeating_att[j]][i] for j,i in enumerate(attributes)])#note +1 s.t. 0th option is always open for empty input
+    input_array = np.array([non_repeating[i] for j,i in enumerate(attributes)])
+    print(input_array)
+    if spell_shift is not None:
+        
+        if isinstance(spell_shift,int):
+            spell_shift = [spell_shift]*13
+        
+        assert len(spell_shift) == 13, f"spell_shift has {len(spell_shift)} values not 13"
+        for i in range(13):
+            input_array[:,i] = np.array(cycle_list(list(input_array[:,i]),spell_shift[i]))
+    if return_input_array:
+        return(input_array)
     
     draw_multiple_inputs(input_array,labels = labels,legend = legend,
                          base_fn = base_fn,base_kwargs = base_kwargs,
                          shape_fn = shape_fn,shape_kwargs = shape_kwargs,
-                         colors = colors,legend_loc = legend_loc)
+                         colors = colors,legend_loc = legend_loc,annotate = annotate)
     
     if concentration:
         plt.plot(0,0,"",markersize = 10,marker = ".",color = colors)
@@ -301,7 +363,7 @@ def draw_attribute(level = None,rang = None, area = None,
 if __name__ == "__main__":
     import argparse
     parser = argparse.ArgumentParser()
-    parser.add_argument("-spell-name",help = "spell name",default = "fireball")
+    parser.add_argument("-spell_name",help = "spell name",default = "fireball")
     parser.add_argument("-level",help = "necessary input: level of the spell",
                         default = "3")
     parser.add_argument("-range",help = "necessary input: range of the spell",
@@ -327,6 +389,7 @@ if __name__ == "__main__":
     parser.add_argument("-ah", "--arg_help",
                         help = "Prints the available options for the chosen attributes",
                         action=argparse.BooleanOptionalAction)
+    parser.add_argument("-c","--custom",help = "Run the non-standard code",action = 'store_true')
     args = parser.parse_args()
 
     if args.arg_help:
@@ -346,20 +409,37 @@ if __name__ == "__main__":
             print("--------School--------")
             print("\n".join(load_attribute("Attributes/school.txt")))
     else:
-
-        if not args.new:
-            draw_spell(level=args.level.lower(),rang=args.range.lower(),
-                       area=args.area.lower(),dtype=args.dtype.lower(),
-                       school=args.school.lower(),
-                       title = args.title,legend = args.legend,
-                    breakdown = args.breakdown,savename = args.savename)
-            plt.clf()
+        if not args.custom:
+            if not args.new:
+                draw_spell(level=args.level.lower(),rang=args.range.lower(),
+                        area=args.area.lower(),dtype=args.dtype.lower(),
+                        school=args.school.lower(),
+                        title = args.title,legend = args.legend,
+                        breakdown = args.breakdown,savename = args.savename)
+                plt.clf()
+            else:
+                draw_spell_2(level = args.level.lower(),rang = args.range.lower(),
+                            area = args.area.lower(),dtype=args.dtype.lower(),
+                            school = args.school.lower(),duration = args.duration.lower(),
+                            concentration=args.concentration,ritual=args.ritual,title =args.title,
+                            savename = args.savename,legend = args.legend,
+                            breakdown = args.breakdown)
+                plt.clf()
         else:
-            draw_spell_2(level = args.level.lower(),rang = args.range.lower(),
-                         area = args.area.lower(),dtype=args.dtype.lower(),
-                         school = args.school.lower(),duration = args.duration.lower(),
-                        concentration=args.concentration,ritual=args.ritual,title =args.title,
-                        savename = args.savename,legend = args.legend,
-                        breakdown = args.breakdown)
-            plt.clf()
+            print("here")
+            base = bases.polygon
+            
+            spellname = args.spell_name
+            spell_data = get_spell(spellname,"G:/python_backup/Python/SpellWriting2/spells/")
+            attr = get_attributes(spell_data)
+            print(attr)
+            draw_spell_2(*attr,title = spellname,
+               savename = "output.png",legend = False,
+                base_fn = base,base_kwargs = [],
+                shape_fn = line_shapes.non_centre_circle,shape_kwargs = [10],
+                colors = [],legend_loc = "upper left",breakdown = False,
+                base_dir = "",return_input_array = False,
+                spell_shift = np.random.randint(0,13,size = (13,)),
+                annotate = True
+                )
     
